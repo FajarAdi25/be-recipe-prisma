@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "users" ALTER COLUMN "image" DROP NOT NULL,
+ALTER COLUMN "image" SET DATA TYPE TEXT;
