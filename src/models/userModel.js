@@ -1,6 +1,8 @@
+/* eslint-disable consistent-return */
 /* eslint-disable import/no-extraneous-dependencies */
 const bcrypt = require('bcrypt');
 const prisma = require('../config/db');
+const cloudinary = require('../config/cloudinaryConfig');
 
 const userModel = {
   findUsers: async () => {
@@ -58,6 +60,19 @@ const userModel = {
       },
     });
     return user;
+  },
+
+  uploadImageProfile: async (image) => {
+    const upload = await cloudinary.uploader.upload(image.path, {
+      folder: '/user',
+      // resource_type: 'image',
+    });
+    return upload;
+  },
+
+  destroyImageProfile: async (image) => {
+    const destroy = await cloudinary.uploader.destroy(image);
+    return destroy;
   },
 };
 

@@ -1,16 +1,19 @@
 const express = require('express');
 const {
-  register, login, me, allUser, editUser, deleteUser,
+  register, login, editUser, deleteUser, allUsers, getUserByIdRedis,
 } = require('../controllers/userController');
-const authMiddleware = require('../middleware/authMiddleware');
+const authMiddleware = require('../middlewares/authMiddleware');
+const uploadPhotoProfile = require('../middlewares/multerProfile');
+const isAdmin = require('../middlewares/verifyRole');
+const hitById = require('../middlewares/redis');
 
 const router = express.Router();
 
-router.get('/user', allUser);
-router.get('/me', authMiddleware, me);
+router.get('/user', authMiddleware, isAdmin, allUsers);
 router.post('/register', register);
 router.post('/login', login);
-router.put('/user/:id', editUser);
-router.delete('/user/:id', deleteUser);
+router.put('/user/:id', authMiddleware, isAdmin, uploadPhotoProfile, editUser);
+router.delete('/user/:id', authMiddleware, isAdmin, deleteUser);
+router.get('/getFromRedis/:id', hitById, getUserByIdRedis);
 
 module.exports = router;

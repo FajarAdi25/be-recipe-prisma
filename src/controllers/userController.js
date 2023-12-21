@@ -1,13 +1,17 @@
+/* eslint-disable consistent-return */
+/* eslint-disable max-len */
 /* eslint-disable import/no-extraneous-dependencies */
 const { compareSync } = require('bcrypt');
-const { response, responseError } = require('../helpers/response');
+const { response, responseError } = require('../utils/response');
 const {
-  findEmail, createUser, findUsers, findIdUser, updateUser, destroyUser,
+  findEmail, createUser, findUsers, findIdUser, updateUser, destroyUser, uploadImageProfile, destroyImageProfile,
 } = require('../models/userModel');
-const { generateToken } = require('../config/jwt');
+const { generateToken, refreshToken } = require('../config/jwt');
+const extractString = require('../utils/extractString');
+const redis = require('../config/redisConfig');
 
 const userController = {
-  allUser: async (req, res) => {
+  allUsers: async (req, res) => {
     try {
       const users = await findUsers();
       response(res, users, 200, 'get all data successful');
@@ -43,21 +47,17 @@ const userController = {
       } else if (!compareSync(userData.password, user.password)) {
         throw new Error('incorrect password');
       }
-      const token = generateToken({
-        userId: user.id,
-      });
-      response(res, { user, token }, 200, 'login successful');
-    } catch (error) {
-      responseError(res, 400, error.message);
-    }
-  },
 
-  me: async (req, res) => {
-    try {
-      const { userId } = req.payload;
-      // console.log(id);
-      const result = await findIdUser(userId);
-      response(res, result, 200, 'authorized');
+      delete user.password;
+      delete user.confirmpassword;
+      const payload = {
+        user,
+      };
+      user.token = generateToken(payload);
+      const reaccessToken = refreshToken(payload);
+      user.reaccessToken = reaccessToken;
+
+      return response(res, user, 200, 'login success');
     } catch (error) {
       responseError(res, 400, error.message);
     }
@@ -70,13 +70,17 @@ const userController = {
       if (!user) {
         throw new Error('user not found');
       }
-      const userData = req.body;
-      const formUserData = {
-        username: userData.username || user.username,
-        phone: userData.phone || user.phone,
-        image: userData.image || user.image,
+
+      const profilImage = await uploadImageProfile(req.file);
+
+      const formUserData = req.body;
+      const userData = {
+        username: formUserData.username || user.username,
+        phone: formUserData.phone || user.phone,
+        image: profilImage.secure_url || user.image,
       };
-      const newUserData = await updateUser(Number(id), formUserData);
+
+      const newUserData = await updateUser(Number(id), userData);
       // console.log(newUserData);
       response(res, newUserData, 200, 'update user successful');
     } catch (error) {
@@ -91,10 +95,34 @@ const userController = {
       if (!user) {
         throw new Error('user not found');
       }
+
+      const imageSubstring = extractString(user.image);
       const deleteData = await destroyUser(Number(id));
+      await destroyImageProfile(imageSubstring);
       response(res, deleteData, 200, 'delete successful');
     } catch (error) {
       responseError(res, 400, error.message);
+    }
+  },
+
+  getUserByIdRedis: async (req, res) => {
+    try {
+      const { id } = req.params;
+      const result = await findIdUser(Number(id));
+      const dataRedis = redis.set(
+        `getFromRedis/${id}`,
+        JSON.stringify(result),
+        { EX: 180, NX: true },
+      );
+      res.json({
+        fromCache: false,
+        data: dataRedis,
+      });
+    } catch (err) {
+      res.json({
+        error: err.message,
+        message: 'error getting user',
+      });
     }
   },
 };

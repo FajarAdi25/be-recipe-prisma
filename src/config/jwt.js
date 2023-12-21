@@ -12,11 +12,22 @@ const generateToken = (payload) => {
 };
 
 const refreshToken = (payload) => {
-  const token = jwt.sign(payload, jwtSecretKey, {
-    expiresIn: '3h',
-  });
+  const token = jwt.sign(
+    {
+      payload,
+    },
+    jwtSecretKey,
+
+    { expiresIn: '3h' },
+  );
   // console.log(token);
   return token;
 };
 
-module.exports = { generateToken, refreshToken };
+const verifyToken = (token) => {
+  const decoded = jwt.verify(token, jwtSecretKey);
+
+  return decoded;
+};
+
+module.exports = { generateToken, refreshToken, verifyToken };
