@@ -2,7 +2,16 @@
 /* eslint-disable no-restricted-syntax */
 const { response, responseError } = require('../utils/response');
 const {
-  updateRecipe, findIdRecipe, findRecipes, createRecipe, destroyRecipe, uploadImageRecipe, uploadVideoRecipe, destroyImageAndVideo, findSortAndPaginate,
+  updateRecipe,
+  findIdRecipe,
+  findRecipes,
+  createRecipe,
+  destroyRecipe,
+  uploadImageRecipe,
+  uploadVideoRecipe,
+  destroyImageAndVideo,
+  findSortAndPaginate,
+  findRecipeByUserId,
 } = require('../models/recipeModel');
 
 // const cloudinary = require('../config/cloudinaryConfig');
@@ -47,6 +56,7 @@ const recipeController = {
         image: recipeImage.secure_url,
         videoName: recipeFormData.videoName,
         video: recipeVideo.secure_url,
+        userId: Number(recipeFormData.userId),
       };
 
       for (const key in newRecipeData) {
@@ -103,6 +113,29 @@ const recipeController = {
       // console.log(imageSubstring);
       // console.log(videoSubstring);
       response(res, deleteRecipe, 200, 'delete recipe successfull');
+    } catch (error) {
+      responseError(res, 400, error.message);
+    }
+  },
+
+  recipeByUserId: async (req, res) => {
+    try {
+      const { id } = req.params;
+
+      const recipe = await findRecipeByUserId(Number(id));
+      // console.log(recipe);
+      response(res, recipe, 200, 'find id successful');
+    } catch (error) {
+      responseError(res, 400, error.message);
+    }
+  },
+
+  recipeById: async (req, res) => {
+    try {
+      const { id } = req.params;
+
+      const recipe = await findIdRecipe(Number(id));
+      response(res, recipe, 200, 'find id successfull');
     } catch (error) {
       responseError(res, 400, error.message);
     }

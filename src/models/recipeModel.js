@@ -25,6 +25,26 @@ const recipeModel = {
     return recipe;
   },
 
+  findRecipeByUserId: async (id) => {
+    const recipe = await prisma.recipe.findMany({
+      select: {
+        id: true,
+        title: true,
+        image: true,
+        userId: true,
+        user: {
+          select: {
+            id: true,
+          },
+        },
+      },
+      where: {
+        userId: id,
+      },
+    });
+    return recipe;
+  },
+
   findIdRecipe: async (id) => {
     const recipe = await prisma.recipe.findFirst({
       where: { id },
@@ -40,6 +60,7 @@ const recipeModel = {
         image: recipeData.image,
         videoName: recipeData.videoName,
         video: recipeData.video,
+        userId: recipeData.userId,
       },
     });
     return recipe;

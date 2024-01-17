@@ -20,6 +20,16 @@ const userController = {
     }
   },
 
+  getUserId: async (req, res) => {
+    try {
+      const { id } = req.params;
+      const user = await findIdUser(Number(id));
+      response(res, user, 200, 'get data user by id successful');
+    } catch (error) {
+      responseError(res, 400, error.message);
+    }
+  },
+
   register: async (req, res) => {
     try {
       const newUserData = req.body;
