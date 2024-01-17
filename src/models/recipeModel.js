@@ -1,3 +1,4 @@
+/* eslint-disable linebreak-style */
 /* eslint-disable consistent-return */
 const prisma = require('../config/db');
 const cloudinary = require('../config/cloudinaryConfig');
