@@ -9,9 +9,9 @@ const isAdmin = require('../middlewares/verifyRole');
 
 const router = express.Router();
 
-router.get('/recipe', authMiddleware, isAdmin, allRecipes);
-router.get('/searchRecipe', authMiddleware, isAdmin, searchSortPaginateRecipe);
-router.get('/recipe/:id', authMiddleware, isAdmin, recipeById);
+router.get('/recipe', authMiddleware, allRecipes);
+router.get('/searchRecipe', authMiddleware, searchSortPaginateRecipe);
+router.get('/recipe/:id', authMiddleware, recipeById);
 router.post('/recipe', authMiddleware, isAdmin, uploadImageAndVideoRecipe, addRecipe);
 router.put('/recipe/:id', authMiddleware, isAdmin, uploadImageAndVideoRecipe, editRecipe);
 router.delete('/recipe/:id', authMiddleware, isAdmin, deleteRecipe);
