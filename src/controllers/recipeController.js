@@ -40,7 +40,7 @@ const recipeController = {
         skip: Number(query.skip) || 0,
       };
       const result = await findSortAndPaginate(newQuery);
-      console.log(result);
+      // console.log(result);
       response(res, result, 200, 'get query data successful');
     } catch (error) {
       responseError(res, 400, error.message);
