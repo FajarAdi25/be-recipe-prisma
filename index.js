@@ -8,13 +8,13 @@ const dotenv = require("dotenv");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 // const createError = require('http-errors');
-const userRoute = require("./routers/userRoute");
-const recipeRoute = require("./routers/recipeRoute");
+const userRoute = require("./src/routers/userRoute");
+const recipeRoute = require("./src/routers/recipeRoute");
 
 dotenv.config();
 
 const app = express();
-const { PORT } = process.env;
+const { PORT } = process.env || 2000;
 
 app.use(cors());
 app.use(cookieParser());
