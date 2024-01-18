@@ -1,7 +1,9 @@
 /* eslint-disable linebreak-style */
+/* eslint-disable quotes */
+/* eslint-disable linebreak-style */
 /* eslint-disable consistent-return */
-const prisma = require('../config/db');
-const cloudinary = require('../config/cloudinaryConfig');
+const prisma = require("../config/db");
+const cloudinary = require("../config/cloudinaryConfig");
 
 const recipeModel = {
   findRecipes: async () => {
@@ -14,7 +16,7 @@ const recipeModel = {
       where: {
         title: {
           contains: query.search,
-          mode: 'insensitive', // ILIKE behavior
+          mode: "insensitive", // ILIKE behavior
         },
       },
       orderBy: {
@@ -23,6 +25,10 @@ const recipeModel = {
       take: query.take,
       skip: query.skip,
     });
+    return recipe;
+  },
+  countingRecipe: async () => {
+    const recipe = await prisma.recipe.count();
     return recipe;
   },
 
@@ -93,8 +99,8 @@ const recipeModel = {
   uploadImageRecipe: async (image) => {
     if (image && image[0]) {
       const upload = await cloudinary.uploader.upload(image[0].path, {
-        folder: '/recipe/recipe_image',
-        resource_type: 'image',
+        folder: "/recipe/recipe_image",
+        resource_type: "image",
       });
       return upload;
     }
@@ -103,8 +109,8 @@ const recipeModel = {
   uploadVideoRecipe: async (video) => {
     if (video && video[0]) {
       const upload = await cloudinary.uploader.upload(video[0].path, {
-        folder: '/recipe/recipe_video',
-        resource_type: 'video',
+        folder: "/recipe/recipe_video",
+        resource_type: "video",
       });
       return upload;
     }
@@ -114,7 +120,6 @@ const recipeModel = {
     const destroy = await cloudinary.api.delete_resources([image, video]);
     return destroy;
   },
-
 };
 
 module.exports = recipeModel;

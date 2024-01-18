@@ -1,3 +1,4 @@
+/* eslint-disable linebreak-style */
 /* eslint-disable max-len */
 const extractString = (url) => {
   const parts = url.split('/');

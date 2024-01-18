@@ -1,3 +1,4 @@
+/* eslint-disable linebreak-style */
 /* eslint-disable max-len */
 /* eslint-disable no-restricted-syntax */
 const { response, responseError } = require('../utils/response');
@@ -30,14 +31,26 @@ const recipeController = {
   searchSortPaginateRecipe: async (req, res) => {
     try {
       const { query } = req;
+      // console.log(query);
       const newQuery = {
+        page: Number.page || 1,
         search: query.search || '',
         sort: query.sort || 'ASC',
-        take: Number(query.take) || 10,
+        take: Number(query.take) || 2,
         skip: Number(query.skip) || 0,
       };
       const result = await findSortAndPaginate(newQuery);
-      response(res, result, 200, 'get data successful');
+      console.log(result);
+      response(res, result, 200, 'get query data successful');
+    } catch (error) {
+      responseError(res, 400, error.message);
+    }
+  },
+
+  countRecipe: async (req, res) => {
+    try {
+      const result = await this.countRecipe();
+      response(res, result, 200, 'get count data successful');
     } catch (error) {
       responseError(res, 400, error.message);
     }
@@ -58,6 +71,7 @@ const recipeController = {
         video: recipeVideo.secure_url,
         userId: Number(recipeFormData.userId),
       };
+      console.log(newRecipeData);
 
       for (const key in newRecipeData) {
         if (!newRecipeData[key]) {

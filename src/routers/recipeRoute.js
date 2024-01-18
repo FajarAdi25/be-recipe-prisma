@@ -1,3 +1,4 @@
+/* eslint-disable linebreak-style */
 const express = require('express');
 const {
   // eslint-disable-next-line max-len
@@ -9,8 +10,8 @@ const isAdmin = require('../middlewares/verifyRole');
 
 const router = express.Router();
 
-router.get('/recipe', authMiddleware, allRecipes);
-router.get('/searchRecipe', authMiddleware, searchSortPaginateRecipe);
+router.get('/', authMiddleware, allRecipes);
+router.get('/recipe', authMiddleware, searchSortPaginateRecipe);
 router.get('/recipe/:id', authMiddleware, recipeById);
 router.post('/recipe', authMiddleware, isAdmin, uploadImageAndVideoRecipe, addRecipe);
 router.put('/recipe/:id', authMiddleware, isAdmin, uploadImageAndVideoRecipe, editRecipe);
