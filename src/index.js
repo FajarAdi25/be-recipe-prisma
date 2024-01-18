@@ -7,7 +7,7 @@ const express = require("express");
 const dotenv = require("dotenv");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
-const createError = require('http-errors');
+// const createError = require('http-errors');
 const userRoute = require("./routers/userRoute");
 const recipeRoute = require("./routers/recipeRoute");
 
@@ -27,22 +27,22 @@ app.get("/", (req, res) => {
 app.use(userRoute);
 app.use(recipeRoute);
 
-app.all("*", (req, res, next) => {
-  next(new createError.NotFound());
-});
+// app.all("*", (req, res, next) => {
+//   next(new createError.NotFound());
+// });
 
-app.use((err, req, res, next) => {
-  const messageError = err.message || "Internal Server Error";
-  const statuError = err.status || 500;
-  const formatError = {
-    status: "Success",
-    statusCode: statuError,
-    data: {
-      message: messageError,
-    },
-  };
-  res.status(statuError).json(formatError);
-});
+// app.use((err, req, res, next) => {
+//   const messageError = err.message || "Internal Server Error";
+//   const statuError = err.status || 500;
+//   const formatError = {
+//     status: "Success",
+//     statusCode: statuError,
+//     data: {
+//       message: messageError,
+//     },
+//   };
+//   res.status(statuError).json(formatError);
+// });
 
 app.listen(PORT, () => {
   console.log(`http://localhost:${PORT}`);
