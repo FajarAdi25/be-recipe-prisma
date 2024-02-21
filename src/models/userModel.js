@@ -1,8 +1,11 @@
+/* eslint-disable linebreak-style */
+/* eslint-disable quotes */
+/* eslint-disable linebreak-style */
 /* eslint-disable consistent-return */
 /* eslint-disable import/no-extraneous-dependencies */
-const bcrypt = require('bcrypt');
-const prisma = require('../config/db');
-const cloudinary = require('../config/cloudinaryConfig');
+const bcrypt = require("bcrypt");
+const prisma = require("../config/db");
+const cloudinary = require("../config/cloudinaryConfig");
 
 const userModel = {
   findUsers: async () => {
@@ -64,7 +67,7 @@ const userModel = {
 
   uploadImageProfile: async (image) => {
     const upload = await cloudinary.uploader.upload(image.path, {
-      folder: '/user',
+      folder: "/user",
       // resource_type: 'image',
     });
     return upload;

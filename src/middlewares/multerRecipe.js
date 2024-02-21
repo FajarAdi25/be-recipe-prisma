@@ -1,10 +1,13 @@
+/* eslint-disable linebreak-style */
+/* eslint-disable quotes */
+/* eslint-disable linebreak-style */
 /* eslint-disable consistent-return */
-const path = require('path');
-const multer = require('multer');
-const { responseError } = require('../utils/response');
+const path = require("path");
+const multer = require("multer");
+const { responseError } = require("../utils/response");
 
 const multerStorage = multer.diskStorage({
-  destination: './public',
+  destination: "./public",
   filename: (req, file, cb) => {
     const ext = path.extname(file.originalname);
     const fileName = `${Date.now()}${ext}`;
@@ -16,36 +19,36 @@ const multerUpload = multer({
   storage: multerStorage,
   fileFilter: (req, file, cb) => {
     const ext = path.extname(file.originalname);
-    const imageExtensions = ['.png', '.jpg', '.jpeg'];
-    const videoExtensions = ['.3gp', '.mpeg', '.mp4'];
+    const imageExtensions = [".png", ".jpg", ".jpeg"];
+    const videoExtensions = [".3gp", ".mpeg", ".mp4"];
     const maxSizeImage = 2 * 1024 * 1024;
     const maxSizeVideo = 50 * 1024 * 1024;
 
-    if (file.fieldname === 'image') {
+    if (file.fieldname === "image") {
       if (imageExtensions.includes(ext)) {
         if (file.size > maxSizeImage) {
-          return cb({ message: 'File size should be less than 2MB' }, false);
+          return cb({ message: "File size should be less than 2MB" }, false);
         }
         return cb(null, true);
       }
-      return cb({ message: 'File must be a .PNG, .JPG, or .JPEG' }, false);
+      return cb({ message: "File must be a .PNG, .JPG, or .JPEG" }, false);
     }
-    if (file.fieldname === 'video') {
+    if (file.fieldname === "video") {
       if (videoExtensions.includes(ext)) {
         if (file.size > maxSizeVideo) {
-          return cb({ message: 'File size exceeds 50 MB' }, false);
+          return cb({ message: "File size exceeds 50 MB" }, false);
         }
         return cb(null, true);
       }
-      return cb({ message: 'File must be mp4 or mpeg' }, false);
+      return cb({ message: "File must be mp4 or mpeg" }, false);
     }
   },
 });
 
 const uploadImageAndVideoRecipe = (req, res, next) => {
   const multerFields = multerUpload.fields([
-    { name: 'video', maxCount: 1 },
-    { name: 'image', maxCount: 1 },
+    { name: "video", maxCount: 1 },
+    { name: "image", maxCount: 1 },
   ]);
 
   multerFields(req, res, (err) => {
