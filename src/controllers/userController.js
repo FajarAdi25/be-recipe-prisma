@@ -1,20 +1,31 @@
+/* eslint-disable linebreak-style */
+/* eslint-disable comma-dangle */
+/* eslint-disable quotes */
+/* eslint-disable linebreak-style */
 /* eslint-disable consistent-return */
 /* eslint-disable max-len */
 /* eslint-disable import/no-extraneous-dependencies */
-const { compareSync } = require('bcrypt');
-const { response, responseError } = require('../utils/response');
+const { compareSync } = require("bcrypt");
+const { response, responseError } = require("../utils/response");
 const {
-  findEmail, createUser, findUsers, findIdUser, updateUser, destroyUser, uploadImageProfile, destroyImageProfile,
-} = require('../models/userModel');
-const { generateToken, refreshToken } = require('../config/jwt');
-const extractString = require('../utils/extractString');
-const redis = require('../config/redisConfig');
+  findEmail,
+  createUser,
+  findUsers,
+  findIdUser,
+  updateUser,
+  destroyUser,
+  uploadImageProfile,
+  destroyImageProfile,
+} = require("../models/userModel");
+const { generateToken, refreshToken } = require("../config/jwt");
+const extractString = require("../utils/extractString");
+const redis = require("../config/redisConfig");
 
 const userController = {
   allUsers: async (req, res) => {
     try {
       const users = await findUsers();
-      response(res, users, 200, 'get all data successful');
+      response(res, users, 200, "get all data successful");
     } catch (error) {
       responseError(res, 400, error.message);
     }
@@ -24,7 +35,7 @@ const userController = {
     try {
       const { id } = req.params;
       const user = await findIdUser(Number(id));
-      response(res, user, 200, 'get data user by id successful');
+      response(res, user, 200, "get data user by id successful");
     } catch (error) {
       responseError(res, 400, error.message);
     }
@@ -36,12 +47,12 @@ const userController = {
       const user = await findEmail(newUserData.email);
       // console.log(newUserData);
       if (user) {
-        throw new Error('user already exists');
+        throw new Error("user already exists");
       } else if (newUserData.password !== newUserData.confirmPassword) {
-        throw new Error('password invalid');
+        throw new Error("password invalid");
       }
       const userData = await createUser(newUserData);
-      response(res, userData, 201, 'create user successful');
+      response(res, userData, 201, "create user successful");
     } catch (error) {
       responseError(res, 400, error.message);
     }
@@ -53,9 +64,9 @@ const userController = {
       const user = await findEmail(userData.email);
       // console.log(user.password);
       if (!user) {
-        throw new Error('user doesnt exists');
+        throw new Error("user doesnt exists");
       } else if (!compareSync(userData.password, user.password)) {
-        throw new Error('incorrect password');
+        throw new Error("incorrect password");
       }
 
       delete user.password;
@@ -67,7 +78,7 @@ const userController = {
       const reaccessToken = refreshToken(payload);
       user.reaccessToken = reaccessToken;
 
-      return response(res, user, 200, 'login success');
+      return response(res, user, 200, "login success");
     } catch (error) {
       responseError(res, 400, error.message);
     }
@@ -78,7 +89,7 @@ const userController = {
       const { id } = req.params;
       const user = await findIdUser(Number(id));
       if (!user) {
-        throw new Error('user not found');
+        throw new Error("user not found");
       }
 
       const profilImage = await uploadImageProfile(req.file);
@@ -92,7 +103,7 @@ const userController = {
 
       const newUserData = await updateUser(Number(id), userData);
       // console.log(newUserData);
-      response(res, newUserData, 200, 'update user successful');
+      response(res, newUserData, 200, "update user successful");
     } catch (error) {
       responseError(res, 400, error.message);
     }
@@ -103,13 +114,13 @@ const userController = {
       const { id } = req.params;
       const user = await findIdUser(Number(id));
       if (!user) {
-        throw new Error('user not found');
+        throw new Error("user not found");
       }
 
       const imageSubstring = extractString(user.image);
       const deleteData = await destroyUser(Number(id));
       await destroyImageProfile(imageSubstring);
-      response(res, deleteData, 200, 'delete successful');
+      response(res, deleteData, 200, "delete successful");
     } catch (error) {
       responseError(res, 400, error.message);
     }
@@ -122,7 +133,7 @@ const userController = {
       const dataRedis = redis.set(
         `getFromRedis/${id}`,
         JSON.stringify(result),
-        { EX: 180, NX: true },
+        { EX: 180, NX: true }
       );
       res.json({
         fromCache: false,
@@ -131,7 +142,7 @@ const userController = {
     } catch (err) {
       res.json({
         error: err.message,
-        message: 'error getting user',
+        message: "error getting user",
       });
     }
   },

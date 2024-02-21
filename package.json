@@ -5,9 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon index.js",
-    "lint:fix": "eslint --fix --ext .js,.jsx .",
-    "postinstall": "prisma generate"
+    "start": "npx prisma db push && npx prisma generate && node ./build/server.js",
+    "lint:fix": "eslint --fix --ext .js,.jsx ."
   },
   "keywords": [],
   "author": "Fajar",

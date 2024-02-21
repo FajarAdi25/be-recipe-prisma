@@ -23,7 +23,7 @@ const recipeModel = {
         title: query.sort.toLowerCase(), // Assuming query.sort is 'ASC' or 'DESC'
       },
       take: query.take,
-      skip: query.skip,
+      skip: (query.page - 1) * query.take,
     });
     return recipe;
   },
