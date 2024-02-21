@@ -5,7 +5,7 @@
 /* eslint-disable consistent-return */
 /* eslint-disable max-len */
 /* eslint-disable import/no-extraneous-dependencies */
-const { compareSync } = require("bcryptjs");
+const { compareSync } = require("bcrypt");
 const { response, responseError } = require("../utils/response");
 const {
   findEmail,
